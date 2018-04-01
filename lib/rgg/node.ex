@@ -3,13 +3,15 @@ defmodule RGG.Node do
   defstruct [
     :x,
     :y,
-    neighbors: []
+    neighbors: [],
+    id: nil
   ]
 
-  def random do
+  def random(id \\ nil) do
     %RGG.Node{
       x: :rand.uniform(),
-      y: :rand.uniform()
+      y: :rand.uniform(),
+      id: id
     }
   end
 
