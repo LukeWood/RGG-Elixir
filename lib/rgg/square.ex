@@ -1,48 +1,65 @@
 defmodule RGG.Square do
 
-  def calculate_radius_square(n, a) do
-    :math.sqrt(a/(n*:math.pi))
-  end
+  defmodule StaticCalculations do
 
-  def num_buckets(r) do
-    round(max(:math.floor(1/r) - 1, 1))
-  end
+    @doc """
+    This function calculates the radius that is used to connect nodes in the square topology of graph.
+    The parameters are n, and a.
+    The returned radius will yield average degree a when connecting randomly generated points on the unit square.
 
-  def get_bucket_from_node(%RGG.Node{x: x, y: y}, n) do
-    {round(x * n), round(y * n)}
-  end
+    ## Examples
+        iex> RGG.Square.StaticCalculations.calculate_radius_square(1000, 25)
+        0.08920620580763855
+    """
+    def calculate_radius_square(n, a) do
+      :math.sqrt(a/(n*:math.pi))
+    end
 
-  def curry_put_node_in_bucket(n) do
-    fn node, buckets ->
-      {x, y} = get_bucket_from_node(node, n)
-      inner_map = Map.get(buckets, x, %{})
-      bucket = Map.get(inner_map, y, [])
-      bucket = [node | bucket]
-      Map.put(buckets, x, Map.put(inner_map, y, bucket))
+    @doc """
+    This function calculates the maximum number of buckets we can use when connecting nodes to achieve linear runtime when connecting the nodes..
+    The only parameter is r as we need to make sure we place nodes within radius r of each other within 1 bucket of each other.
+    ## Examples
+        iex>RGG.Square.StaticCalculations.calculate_radius_square(1000, 25) |> RGG.Square.StaticCalculations.num_buckets()
+        10
+    """
+    def num_buckets(r) do
+      round(max(:math.floor(1/r) - 1, 1))
     end
   end
 
-  def not_nil(nil), do: false
-  def not_nil(_),   do: true
+  defmodule Bucketization do
 
-  def get_adjacent_nodes_for_bucket(node, buckets) do
-  	offsets = [{1, -1}, {1, 0}, {1, 1}, {0,1}]
-    {x, y} = get_bucket_from_node(node, map_size(buckets))
-    Enum.map(offsets,
-      fn {dx, dy} ->
-        Map.get(buckets, x+dx, %{}) |>
-          Map.get(y+dy, [])
-      end) |>
-      List.flatten
-  end
+    def get_bucket_from_node(%RGG.Node{x: x, y: y}, n) do
+      {round(x * n), round(y * n)}
+    end
 
-  def find_buckets(nodes, r) do
-    n = num_buckets(r)
-    Enum.reduce(nodes, %{}, curry_put_node_in_bucket(n))
+    def curry_put_node_in_bucket(n) do
+      fn node, buckets ->
+        {x, y} = get_bucket_from_node(node, n)
+        inner_map = Map.get(buckets, x, %{})
+        bucket = [node | Map.get(inner_map, y, [])]
+        Map.put(buckets, x, Map.put(inner_map, y, bucket))
+      end
+    end
+
+    def get_adjacent_nodes_for_bucket(node, buckets) do
+    	offsets = [{1, -1}, {1, 0}, {1, 1}, {0,1}]
+      {x, y} = get_bucket_from_node(node, map_size(buckets))
+      Enum.map(offsets,
+        fn {dx, dy} ->
+          Map.get(buckets, x+dx, %{}) |>
+            Map.get(y+dy, [])
+        end) |>
+        List.flatten
+    end
+
+    def find_buckets(nodes, number_of_buckets) do
+      Enum.reduce(nodes, %{}, curry_put_node_in_bucket(number_of_buckets))
+    end
   end
 
   def connect_to_neighbors(node, buckets, r) do
-    get_adjacent_nodes_for_bucket(node, buckets) |>
+    Bucketization.get_adjacent_nodes_for_bucket(node, buckets) |>
       Enum.reject(fn node2 ->
         RGG.Util.distance2d(node, node2) < r
       end) |>
@@ -50,9 +67,9 @@ defmodule RGG.Square do
   end
 
   def unit_square(n, a) do
-    r = calculate_radius_square(n, a)
+    r = StaticCalculations.calculate_radius_square(n, a)
     nodes = Enum.map(Range.new(0, n), fn id -> RGG.Node.random(id) end)
-    buckets = find_buckets(nodes, r)
+    buckets = Bucketization.find_buckets(nodes, StaticCalculations.num_buckets(r))
     nodes |>
       Enum.map(fn node -> connect_to_neighbors(node, buckets, r) end)
   end

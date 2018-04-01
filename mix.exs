@@ -7,7 +7,24 @@ defmodule RGG.MixProject do
       version: "0.1.0",
       elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      description: description(),
+      deps: deps(),
+      package: package()
+    ]
+  end
+
+  defp description do
+    "This package generates random geometric graphs"
+  end
+
+  defp package do
+    [
+      name: "rgg",
+      deps: deps(),
+      licenses: ["MIT"],
+      maintainers: ["Luke Wood"],
+      links: %{"GitHub" => "https://github.com/LukeWood/RGG-Elixir"},
+      source_url: "https://github.com/LukeWood/RGG-Elixir"
     ]
   end
 
