@@ -1,8 +1,6 @@
 defmodule RGG.SquareTest do
   use ExUnit.Case
   doctest RGG.Square
-  doctest RGG.Square.StaticCalculations
-  doctest RGG.Square.Bucketization
 
   describe "RGG Square" do
     test "n=10000, a=25" do
