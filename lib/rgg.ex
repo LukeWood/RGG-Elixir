@@ -1,18 +1,5 @@
-defmodule Rgg do
-  @moduledoc """
-  Documentation for Rgg.
-  """
+defmodule RGG do
 
-  @doc """
-  Hello world.
+  defdelegate unit_square(n, a), to: RGG.Square
 
-  ## Examples
-
-      iex> Rgg.hello
-      :world
-
-  """
-  def hello do
-    :world
-  end
 end
