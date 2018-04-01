@@ -9,7 +9,9 @@ defmodule RGGTest do
     average_degree = Enum.reduce(degrees, 0,
       fn x, acc -> acc + x/n end
     )
-    IO.inspect adj_list
+    err = (a - average_degree)/a
+    assert(err < 0.2, "Error on average degree of #{err}, expected < 0.2")
+
   end
 
 end

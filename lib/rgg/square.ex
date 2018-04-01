@@ -43,7 +43,7 @@ defmodule RGG.Square do
 
   def connect_to_neighbors(node, buckets, r) do
     get_adjacent_nodes_for_bucket(node, buckets) |>
-      Enum.filter(fn node2 ->
+      Enum.reject(fn node2 ->
         RGG.Util.distance2d(node, node2) < r
       end) |>
       Enum.map(fn %RGG.Node{id: id} -> id end)
