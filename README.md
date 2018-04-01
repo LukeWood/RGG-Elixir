@@ -4,6 +4,11 @@ This package generates random geometric graphs in the elixir programming languag
 Hex docs at:
 https://hexdocs.pm/rgg/0.1.0
 
+Add to deps:
+```elixir
+ {:rgg, ">= 0.1.0"}
+```
+
 Example:
 
 ```elixir
