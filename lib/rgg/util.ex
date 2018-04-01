@@ -4,4 +4,16 @@ defmodule RGG.Util do
     dy = y1-y2
     :math.sqrt(dx*dx + dy*dy)
   end
+
+  def degrees(adj_list) do
+    Enum.map(adj_list, fn node -> length(node) end)
+  end
+
+  def average_degree(degrees) do
+    n = length(degrees)
+    Enum.reduce(degrees, 0,
+      fn x, acc -> acc + x/n end
+    )
+  end
+
 end
