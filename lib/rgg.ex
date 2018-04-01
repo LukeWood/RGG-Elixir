@@ -11,4 +11,7 @@ defmodule RGG do
     Returns an Adjacency List
   """
   defdelegate unit_square(n, a), to: RGG.Square
+  defdelegate unit_disc(n, a),   to: RGG.Disc
+  defdelegate unit_sphere(n, a), to: RGG.Sphere
+
 end
