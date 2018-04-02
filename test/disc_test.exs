@@ -1,12 +1,12 @@
-defmodule RGG.SquareTest do
+defmodule RGG.DiscTest do
   use ExUnit.Case
-  doctest RGG.Square
+  doctest RGG.Disc
 
-  describe "RGG Square" do
+  describe "RGG Disc" do
     test "n=10000, a=25" do
       n=10000
       a=25
-      adj_list = RGG.unit_square(n, a)
+      adj_list = RGG.unit_disc(n, a)
       degrees = RGG.Util.degrees(adj_list)
       average_degree = RGG.Util.average_degree(degrees)
       err = abs((a - average_degree)/a)
