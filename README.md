@@ -6,7 +6,7 @@ https://hexdocs.pm/rgg/0.1.0
 
 Add to deps:
 ```elixir
- {:rgg, ">= 0.1.0"}
+ {:rgg, ">= 1.0.0"}
 ```
 
 Example:
