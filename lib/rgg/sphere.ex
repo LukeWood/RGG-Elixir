@@ -18,9 +18,9 @@ defmodule RGG.Sphere do
     y = :math.sqrt(1 - u*u) * :math.sin(theta)
     z = u
     %RGG.Node{
-      x: x,
-      y: y,
-      z: z,
+      x: (x+1)/2,
+      y: (y+1)/2,
+      z: (z+1)/2,
       id: id
     }
   end
